@@ -1,0 +1,28 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+	var template = Path.GetFileName(this.Host.TemplateFile);
+	var resxname = Path.GetFileNameWithoutExtension(this.Host.TemplateFile) + ".resx";
+
+	WriteLine("// This file is generated from {0} and {1}.", template, resxname);
+	WriteLine("// DON'T EDIT THIS FILE MANUALLY.");
+#>
+<#+
+	private void EnumLabels()
+	{
+		var resxname = Path.GetFileNameWithoutExtension(this.Host.TemplateFile) + ".resx";
+		var source = this.Host.ResolvePath(resxname);
+		foreach (var name in XElement.Load(source).Elements("data").Attributes("name"))
+		{
+			WriteLine("{0},", (string)name);
+		}
+	}
+#>

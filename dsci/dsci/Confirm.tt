@@ -1,0 +1,13 @@
+﻿<#@ include file="ResXEnumGenerator.t4" #>
+
+namespace dsci
+{
+	public enum Confirm
+	{
+<#
+		PushIndent("        ");
+		EnumLabels();
+		PopIndent();
+#>
+	}
+}

@@ -1,0 +1,87 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="dsci.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DsRegistryKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HKEY_CURRENT_USER\Software\DAZ\Studio4</Value>
+    </Setting>
+    <Setting Name="DsContentDirValuePrefix" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ContentDir</Value>
+    </Setting>
+    <Setting Name="DsContentDirMax" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="TopDirectory_0" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">aniBlocks</Value>
+    </Setting>
+    <Setting Name="TopDirectory_1" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Animals</Value>
+    </Setting>
+    <Setting Name="TopDirectory_2" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Camera Presets</Value>
+    </Setting>
+    <Setting Name="TopDirectory_3" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Environments</Value>
+    </Setting>
+    <Setting Name="TopDirectory_4" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">General</Value>
+    </Setting>
+    <Setting Name="TopDirectory_5" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Light Presets</Value>
+    </Setting>
+    <Setting Name="TopDirectory_6" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Lights</Value>
+    </Setting>
+    <Setting Name="TopDirectory_7" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">People</Value>
+    </Setting>
+    <Setting Name="TopDirectory_8" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Render Presets</Value>
+    </Setting>
+    <Setting Name="TopDirectory_10" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Presets</Value>
+    </Setting>
+    <Setting Name="TopDirectory_11" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Runtime</Value>
+    </Setting>
+    <Setting Name="TopDirectory_12" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Scene Builder</Value>
+    </Setting>
+    <Setting Name="TopDirectory_13" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Scenes</Value>
+    </Setting>
+    <Setting Name="TopDirectory_14" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Scripts</Value>
+    </Setting>
+    <Setting Name="TopDirectory_15" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Shader Presets</Value>
+    </Setting>
+    <Setting Name="TopDirectory_16" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">data</Value>
+    </Setting>
+    <Setting Name="TopDirectory_9" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Props</Value>
+    </Setting>
+    <Setting Name="ParentDirectory_0" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">My DAZ 3D Library</Value>
+    </Setting>
+    <Setting Name="ParentDirectory_1" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">My Library</Value>
+    </Setting>
+    <Setting Name="ParentDirectory_2" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Content</Value>
+    </Setting>
+    <Setting Name="OtherFilesDirectory" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ReadMe's</Value>
+    </Setting>
+    <Setting Name="Ignorable_0" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">__MACOSX</Value>
+    </Setting>
+    <Setting Name="Ignorable_1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.DS_Store</Value>
+    </Setting>
+    <Setting Name="Ignorable_2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">._.DS_Store</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

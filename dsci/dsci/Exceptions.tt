@@ -1,0 +1,36 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+	WriteLine("// This file is generated with T4.");
+	WriteLine("// DON'T EDIT THIS FILE MANUALLY.");
+#>
+
+using System;
+
+namespace dsci
+{
+	<#
+		PushIndent("    ");
+		E("UserCancel");
+		E("ZipSkipped");
+		E("InternalError");
+		PopIndent();
+	#>
+}
+
+<#+
+	private void E(string name)
+	{
+		WriteLine("public class {0}Exception : Exception", name);
+		WriteLine("{");
+		WriteLine("    public {0}Exception() {{}}", name);
+		WriteLine("    public {0}Exception(string message) : base(message) {{}}", name);
+		WriteLine("    public {0}Exception(string message, Exception inner) : base(message, inner) {{}}", name);
+		WriteLine("}");
+		WriteLine("");
+	}
+#>
