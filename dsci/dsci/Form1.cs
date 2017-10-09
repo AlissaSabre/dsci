@@ -48,6 +48,7 @@ namespace dsci
 
         private void installButton_Click(object sender, EventArgs e)
         {
+            progress.Value = progress.Minimum;
             var p = new WorkerParams();
             p.ContentDirectory = (string)contentDirectory.SelectedItem;
             p.ZipFiles = openFileDialog1.FileNames;
@@ -57,15 +58,15 @@ namespace dsci
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             var args = (WorkerParams)e.Argument;
+            var progress = new Progress(0, 100, Installer_ProgressUpdated);
             var installer = new Installer();
-            installer.ProgressChanged += Installer_ProgressChanged;
             installer.ConfirmRequired += Installer_Confirm;
-            installer.Install(args.ContentDirectory, args.ZipFiles);
+            installer.Install(args.ContentDirectory, args.ZipFiles, progress);
         }
 
-        private void Installer_ProgressChanged(object sender, ProgressChangedEventArgs args)
+        private void Installer_ProgressUpdated(float progress)
         {
-            throw new NotImplementedException();
+            backgroundWorker1.ReportProgress((int)Math.Round(progress), null);
         }
 
         private void Installer_Confirm(object sender, ConfirmEventArgs args)
@@ -80,16 +81,15 @@ namespace dsci
             });
         }
 
-        private void backgroundWorker1_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-
+            progress.Value = e.ProgressPercentage;
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Error == null)
             {
-                MessageBox.Show(this, "Done.");
             }
             else if (e.Error is UserCancelException)
             {

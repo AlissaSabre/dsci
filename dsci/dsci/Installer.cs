@@ -8,16 +8,10 @@ using System.IO.Compression;
 using System.Configuration;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.ComponentModel;
 
 namespace dsci
 {
-    public class ProgressChangedEventArgs : EventArgs
-    {
-        int Progress;
-    }
-
-    public delegate void ProgressChangedEventHandler(object sender, ProgressChangedEventArgs args);
-
     public class Installer
     {
         private static readonly string[] TopDirectories = Properties.Settings.Default.Array<string>("TopDirectory");
@@ -26,17 +20,16 @@ namespace dsci
 
         private static readonly string[] Ignorables = Properties.Settings.Default.Array<string>("Ignorable");
 
-        public event ProgressChangedEventHandler ProgressChanged;
-
         public event ConfirmEventHandler ConfirmRequired;
 
-        public void Install(string content_directory, string[] zip_files)
+        public void Install(string content_directory, string[] zip_files, Progress progress)
         {
+            progress = progress.Divide(zip_files.Length);
             foreach (var file in zip_files)
             {
                 try
                 {
-                    Install(content_directory, file);
+                    Install(content_directory, file, progress);
                 }
                 catch (ZipSkippedException)
                 {
@@ -45,28 +38,30 @@ namespace dsci
                 {
                     Ask(Confirm.IOError, ConfirmChoices.Ok, file, e.Message);
                 }
+                progress.Advance();
             }
         }
 
         private static readonly char[] SEPARATORS = { '/', '\\' };
 
-        public void Install(string content_directory, string zip_filename)
+        private void Install(string content_directory, string zip_filename, Progress progress)
         {
             using (var zip = new ZipArchive(File.OpenRead(zip_filename)))
             {
-                foreach (var entry in zip.Entries)
-                {
-                    var path = entry.FullName;
-                }
+                progress = progress.Divide(zip.Entries.Count + 1);
+
                 var preamble = DetectPreamble(zip, zip_filename);
+                progress.Advance();
 
                 var contents = new List<ZipArchiveEntry>();
                 var others = new List<ZipArchiveEntry>();
+                int ignored = 0;
                 foreach (var entry in zip.Entries)
                 {
                     if (entry.Name.Length == 0 ||
                         Ignorables.Any(n => 0 == string.Compare(n, entry.Name, StringComparison.InvariantCultureIgnoreCase)))
                     {
+                        ++ignored;
                     }
                     else if (preamble != null
                         && entry.FullName.StartsWith(preamble)
@@ -80,11 +75,14 @@ namespace dsci
                     }
                 }
 
+                progress.Advance(ignored);
+
                 if (contents.Count > 0)
                 {
                     foreach (var entry in contents)
                     {
                         Extract(content_directory, entry.FullName.Substring(preamble.Length), entry, zip_filename, others);
+                        progress.Advance();
                     }
                 }
                 else
@@ -106,6 +104,7 @@ namespace dsci
                     foreach (var entry in others)
                     {
                         Extract(folder, entry.FullName, entry, zip_filename, null);
+                        progress.Advance();
                     }
                 }
             }
