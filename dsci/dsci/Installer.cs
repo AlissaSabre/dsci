@@ -41,6 +41,10 @@ namespace dsci
                 catch (ZipSkippedException)
                 {
                 }
+                catch (IOException e)
+                {
+                    Ask(Confirm.IOError, ConfirmChoices.Ok, file, e.Message);
+                }
             }
         }
 
@@ -148,10 +152,15 @@ namespace dsci
                 // The path was absolute.  It should never happen, since we have already checked the case.
                 throw new InternalErrorException("Absolute ZIP path in Extract.");
             }
+
+            // Take care of the cases that the file exists at the extract_path.
             if (File.Exists(extract_path))
             {
+                if (Identical(entry, extract_path, zip_filename)) return;
+
                 if (others != null)
                 {
+                    // When extracting a content, the user gets a chance to extract the duplicate file as a "other" file.
                     var resp = Ask(Confirm.FileExists, ConfirmChoices.YesNoCancel, zip_filename, entry.Name);
                     if (resp != ConfirmResponse.Yes)
                     {
@@ -161,6 +170,7 @@ namespace dsci
                 }
                 else
                 {
+                    // When extracting a "other" file, the options are "overwrite" and "discard".
                     var resp = Ask(Confirm.FileExists2, ConfirmChoices.YesNoCancel, zip_filename, entry.Name);
                     if (resp != ConfirmResponse.Yes)
                     {
@@ -168,6 +178,8 @@ namespace dsci
                     }
                 }
             }
+
+            // Extract the file, overwriting any existing file.
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(extract_path));
@@ -181,13 +193,35 @@ namespace dsci
                     throw new ZipSkippedException("", e);
                 }
             }
-            catch (IOException e)
+        }
+
+        private bool Identical(ZipArchiveEntry entry, string path, string zip_filename)
+        {
+            try
             {
-                var resp = Ask(Confirm.IOErrorInExtraction, ConfirmChoices.YesNoCancel, zip_filename, entry.Name);
+                using (Stream s1 = entry.Open(), s2 = File.OpenRead(path))
+                {
+                    // if (s1.Length != s2.Length) return false;
+                    if (entry.Length != s2.Length) return false;
+                    // Ah, no.  We should not do it this way...
+                    for (;;)
+                    {
+                        var c1 = s1.ReadByte();
+                        var c2 = s2.ReadByte();
+                        if (c1 != c2) return false;
+                        if (c1 == -1) return true;
+                    }
+                }
+            }
+            catch (InvalidDataException e)
+            {
+                var resp = Ask(Confirm.InvalidZipData, ConfirmChoices.YesNoCancel, zip_filename, entry.Name);
                 if (resp != ConfirmResponse.Yes)
                 {
                     throw new ZipSkippedException("", e);
                 }
+                // Returning true makes the caller to silently ignore this file.
+                return true;
             }
         }
 

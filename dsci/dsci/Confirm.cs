@@ -10,7 +10,7 @@ namespace dsci
         FileExists,
         FileExists2,
         InvalidZipData,
-        IOErrorInExtraction,
+        IOError,
         NoCompatibleContents,
 	}
 }

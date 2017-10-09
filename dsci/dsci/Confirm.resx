@@ -142,11 +142,9 @@ Yes: Try to extract other files from this ZIP file.
 No: Stop extracting files from this ZIP file.
 Cancel: Quit the install operations.</value>
   </data>
-  <data name="IOErrorInExtraction" xml:space="preserve">
-    <value>An I/O error occurred when handling file "{1}" in "{0}".  Do you want to skip this file and try to extract other files from this ZIP file?
-Yes: Skip this file and try to extract other files from this ZIP file.
-No: Stop extracting files from this ZIP file.
-Cancel: Quit the install operations.</value>
+  <data name="IOError" xml:space="preserve">
+    <value>An I/O error occurred when processing "{0}" ({1}).</value>
+    <comment>Catch all message.  {0} is the name of the ZIP file, and {1} is taken from the underlying Exception.</comment>
   </data>
   <data name="NoCompatibleContents" xml:space="preserve">
     <value>The ZIP file "{0}" includes no compatible content data.  It is not likely a DAZ contents file.  Do you want to extract anyway?

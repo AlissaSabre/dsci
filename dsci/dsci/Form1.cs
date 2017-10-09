@@ -97,7 +97,7 @@ namespace dsci
             }
             else
             {
-                MessageBox.Show(this, e.ToString(), "Exception");
+                MessageBox.Show(this, e.Error.ToString(), "Exception");
             }
         }
     }
