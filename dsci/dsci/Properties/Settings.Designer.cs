@@ -248,27 +248,30 @@ namespace dsci.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(".DS_Store")]
         public string Ignorable_1 {
             get {
                 return ((string)(this["Ignorable_1"]));
             }
-            set {
-                this["Ignorable_1"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("._.DS_Store")]
         public string Ignorable_2 {
             get {
                 return ((string)(this["Ignorable_2"]));
             }
-            set {
-                this["Ignorable_2"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("^(Documents?|Documentations?|ReadMes?|.*[ _!-]ReadMe\'?s?)(?=[/\\\\])")]
+        public string OtherFilesAliasRE {
+            get {
+                return ((string)(this["OtherFilesAliasRE"]));
             }
         }
     }

@@ -77,11 +77,14 @@
     <Setting Name="Ignorable_0" Type="System.String" Scope="Application">
       <Value Profile="(Default)">__MACOSX</Value>
     </Setting>
-    <Setting Name="Ignorable_1" Type="System.String" Scope="User">
+    <Setting Name="Ignorable_1" Type="System.String" Scope="Application">
       <Value Profile="(Default)">.DS_Store</Value>
     </Setting>
-    <Setting Name="Ignorable_2" Type="System.String" Scope="User">
+    <Setting Name="Ignorable_2" Type="System.String" Scope="Application">
       <Value Profile="(Default)">._.DS_Store</Value>
+    </Setting>
+    <Setting Name="OtherFilesAliasRE" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">^(Documents?|Documentations?|ReadMes?|.*[ _!-]ReadMe'?s?)(?=[/\\])</Value>
     </Setting>
   </Settings>
 </SettingsFile>

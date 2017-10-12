@@ -20,6 +20,9 @@ namespace dsci
 
         private static readonly string[] Ignorables = Properties.Settings.Default.Array<string>("Ignorable");
 
+        private static readonly Regex OtherFilesAliasRE =
+            new Regex(Properties.Settings.Default.OtherFilesAliasRE, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
         public event ConfirmEventHandler ConfirmRequired;
 
         public void Install(string content_directory, string[] zip_files, Progress progress)
@@ -81,7 +84,7 @@ namespace dsci
                 {
                     foreach (var entry in contents)
                     {
-                        Extract(content_directory, entry.FullName.Substring(preamble.Length), entry, zip_filename, others);
+                        Extract(content_directory, TrimPath(entry.FullName, preamble), entry, zip_filename, others);
                         progress.Advance();
                     }
                 }
@@ -141,6 +144,13 @@ namespace dsci
                 }
             }
             return null;
+        }
+
+        private string TrimPath(string fullname, string preamble)
+        {
+            return OtherFilesAliasRE.Replace(
+                fullname.Substring(preamble.Length), 
+                Properties.Settings.Default.OtherFilesDirectory);
         }
 
         private void Extract(string folder, string path, ZipArchiveEntry entry, string zip_filename, List<ZipArchiveEntry> others)
