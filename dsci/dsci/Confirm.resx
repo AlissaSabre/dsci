@@ -152,4 +152,10 @@ Yes: Extract this ZIP file.
 No: Skip this ZIP file.
 Cancel: Quit the install operations.</value>
   </data>
+  <data name="EntryTooLong" xml:space="preserve">
+    <value>The file "{1}" in archive "{0}" is too long to process.  Do you want to extract other files from this archive file?
+Yes: Try to extract other files from this archive file.
+No: Stop extracting files from this archive file.
+Cancel: Quit the install operations.</value>
+  </data>
 </root>

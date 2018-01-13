@@ -12,5 +12,6 @@ namespace dsci
         InvalidZipData,
         IOError,
         NoCompatibleContents,
+        EntryTooLong,
 	}
 }
