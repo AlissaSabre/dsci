@@ -1,4 +1,5 @@
-﻿// This file is generated with T4.
+﻿
+// This file is generated with T4.
 // DON'T EDIT THIS FILE MANUALLY.
 
 using System;

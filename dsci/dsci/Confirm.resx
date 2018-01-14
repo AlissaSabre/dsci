@@ -118,44 +118,50 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AbsolutePathInZip" xml:space="preserve">
-    <value>The ZIP file "{0}" contains an absolute path.  It can be a sign of a security threat.
-OK: Skip this ZIP file.
+    <value>The archive "{0}" contains an absolute path.  It can be a sign of a security threat.  You should better not use this archive file.
+
+OK: Skip this archive file.
 Cancel: Quit the install operations.</value>
   </data>
   <data name="FileExists" xml:space="preserve">
-    <value>The file "{1}" in "{0}" already exists in the content library.  Do you want to overwrite?
+    <value>The file "{1}" in archive "{0}" already exists in the content library.  Do you want to overwrite?
+
 Yes: Overwrite the existing file with the new file.
 No: Existing file is preserved and the new file will be sotred as other file.
 Cancel: Quit the install operations.</value>
     <comment>This message is used for a recognized content file.</comment>
   </data>
   <data name="FileExists2" xml:space="preserve">
-    <value>The file "{1}" in "{0}" already exists in the content library.  Do you want to overwrite?
+    <value>The file "{1}" in archive "{0}" already exists in the content library.  Do you want to overwrite?
+
 Yes: Overwrite the existing file with the new file.
-No: Existing file is preserved and the new file in ZIP is discarded.
+No: Existing file is preserved and the new file is ignored.
 Cancel: Quit the install operations.</value>
     <comment>This message is used for an unrecognized "other" file.</comment>
   </data>
   <data name="InvalidZipData" xml:space="preserve">
-    <value>The file "{1}" in "{0}" includes compressed data that this program can't handle.  Do you want to extract other files from this ZIP file?
+    <value>The file "{1}" in archive "{0}" includes compressed data that this program can't handle.  Do you want to extract other files from this ZIP file?
+
 Yes: Try to extract other files from this ZIP file.
 No: Stop extracting files from this ZIP file.
 Cancel: Quit the install operations.</value>
   </data>
   <data name="IOError" xml:space="preserve">
     <value>An I/O error occurred when processing "{0}" ({1}).</value>
-    <comment>Catch all message.  {0} is the name of the ZIP file, and {1} is taken from the underlying Exception.</comment>
+    <comment>Catch all message.  {0} is the name of the archive, and {1} is taken from the underlying Exception.</comment>
   </data>
   <data name="NoCompatibleContents" xml:space="preserve">
-    <value>The ZIP file "{0}" includes no compatible content data.  It is not likely a DAZ contents file.  Do you want to extract anyway?
-Yes: Extract this ZIP file.
-No: Skip this ZIP file.
+    <value>No compatible content data is detected in the archive "{0}".  It is not likely a DAZ contents file.  Do you want to extract files anyway?
+
+Yes: Extract files from this archive.
+No: Skip this archive.
 Cancel: Quit the install operations.</value>
   </data>
   <data name="EntryTooLong" xml:space="preserve">
-    <value>The file "{1}" in archive "{0}" is too long to process.  Do you want to extract other files from this archive file?
-Yes: Try to extract other files from this archive file.
-No: Stop extracting files from this archive file.
+    <value>The file "{1}" in archive "{0}" is too big to process.  Do you want to extract other files from this archive file?
+
+Yes: Try to extract other files from this archive.
+No: Stop extracting files from this archive.
 Cancel: Quit the install operations.</value>
   </data>
 </root>

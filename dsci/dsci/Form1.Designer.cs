@@ -67,9 +67,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(14, 73);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(98, 14);
+            this.label2.Size = new System.Drawing.Size(118, 14);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Content ZIP files";
+            this.label2.Text = "Content archive files";
             // 
             // zipFiles
             // 
@@ -104,7 +104,7 @@
             // openFileDialog1
             // 
             this.openFileDialog1.AddExtension = false;
-            this.openFileDialog1.Filter = "ZIP files|*.zip";
+            this.openFileDialog1.Filter = "Archive files|*.zip;*.rar;*.7z";
             this.openFileDialog1.Multiselect = true;
             // 
             // zipFilesButton

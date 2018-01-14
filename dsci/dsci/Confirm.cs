@@ -1,4 +1,5 @@
-﻿// This file is generated from Confirm.tt and Confirm.resx.
+﻿
+// This file is generated from Confirm.tt and Confirm.resx.
 // DON'T EDIT THIS FILE MANUALLY.
 
 

@@ -1,4 +1,6 @@
-﻿<#@ include file="ResXEnumGenerator.t4" #>
+﻿<# /* This T4 template creates Confirm.cs from Confirm.resx. */ #>
+
+<#@ include file="ResXEnumGenerator.t4" #>
 
 namespace dsci
 {
