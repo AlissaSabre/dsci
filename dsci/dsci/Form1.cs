@@ -29,10 +29,22 @@ namespace dsci
             zipFiles.Select(0, 0);
             if (DialogResult.OK == openFileDialog1.ShowDialog(this))
             {
-                zipFiles.Text =
-                    openFileDialog1.FileNames.Length > 1
-                    ? '"' + string.Join("\", \"", openFileDialog1.SafeFileNames) + '"'
-                    : openFileDialog1.SafeFileName;
+                if (openFileDialog1.FileNames.Length == 1)
+                {
+                    zipFiles.Text = openFileDialog1.SafeFileName;
+                }
+                else
+                {
+                    // Limit the feedback length to workaround a strange behaviour of TextBox.
+                    var remaining = 4000;
+                    var names = openFileDialog1.SafeFileNames.TakeWhile(s => (remaining -= s.Length + 3) > 0).ToList();
+                    var text = '"' + string.Join("\" \"", names) + '"';
+                    if (names.Count < openFileDialog1.SafeFileNames.Length)
+                    {
+                        text = string.Format("{0} files: {1} ...", openFileDialog1.SafeFileNames.Length, text);
+                    }
+                    zipFiles.Text = text;
+                }
             }
         }
 
