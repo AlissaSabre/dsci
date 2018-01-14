@@ -274,5 +274,14 @@ namespace dsci.Properties {
                 return ((string)(this["OtherFilesAliasRE"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2147483647")]
+        public int MaxFileLength {
+            get {
+                return ((int)(this["MaxFileLength"]));
+            }
+        }
     }
 }

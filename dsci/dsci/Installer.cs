@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO.Compression;
 using System.Configuration;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using System.ComponentModel;
+using SevenZipExtractor;
 
 namespace dsci
 {
@@ -49,26 +49,33 @@ namespace dsci
 
         private void Install(string content_directory, string zip_filename, Progress progress)
         {
-            using (var zip = new ZipArchive(File.OpenRead(zip_filename)))
+            using (var zip = new ArchiveFile(File.OpenRead(zip_filename)))
             {
                 progress = progress.Divide(zip.Entries.Count + 1);
 
                 var preamble = DetectPreamble(zip, zip_filename);
                 progress.Advance();
 
-                var contents = new List<ZipArchiveEntry>();
-                var others = new List<ZipArchiveEntry>();
+                var contents = new List<Entry>();
+                var others = new List<Entry>();
                 int ignored = 0;
                 foreach (var entry in zip.Entries)
                 {
-                    if (entry.Name.Length == 0 ||
-                        Ignorables.Any(n => 0 == string.Compare(n, entry.Name, StringComparison.InvariantCultureIgnoreCase)))
+                    if (entry.IsFolder || IsIgnorable(entry.FileName))
                     {
                         ++ignored;
                     }
+                    else if (entry.Size > int.MaxValue)
+                    {
+                        var resp = Ask(Confirm.EntryTooLong, ConfirmChoices.YesNoCancel, zip_filename, Path.GetFileName(entry.FileName));
+                        if (resp == ConfirmResponse.No)
+                        {
+                            throw new ZipSkippedException();
+                        }
+                    }
                     else if (preamble != null
-                        && entry.FullName.StartsWith(preamble)
-                        && entry.FullName.IndexOfAny(SEPARATORS, preamble.Length) >= 0)
+                        && entry.FileName.StartsWith(preamble)
+                        && entry.FileName.IndexOfAny(SEPARATORS, preamble.Length) >= 0)
                     {
                         contents.Add(entry);
                     }
@@ -84,7 +91,7 @@ namespace dsci
                 {
                     foreach (var entry in contents)
                     {
-                        Extract(content_directory, TrimPath(entry.FullName, preamble), entry, zip_filename, others);
+                        Extract(content_directory, AdjustPath(entry.FileName, preamble), entry, zip_filename, others);
                         progress.Advance();
                     }
                 }
@@ -106,20 +113,26 @@ namespace dsci
                     Directory.CreateDirectory(folder);
                     foreach (var entry in others)
                     {
-                        Extract(folder, entry.FullName, entry, zip_filename, null);
+                        Extract(folder, entry.FileName, entry, zip_filename, null);
                         progress.Advance();
                     }
                 }
             }
         }
 
+        private static bool IsIgnorable(string path)
+        {
+            var name = Path.GetFileName(path);
+            return Ignorables.Any(n => 0 == string.Compare(n, name, StringComparison.InvariantCultureIgnoreCase));
+        }
+
         private static readonly Regex PathComponentRE = new Regex(@"[^/\\]+(?=[/\\])");
 
-        private string DetectPreamble(ZipArchive zip, string zip_filename)
+        private string DetectPreamble(ArchiveFile zip, string zip_filename)
         {
             foreach (var entry in zip.Entries)
             {
-                var path = entry.FullName;
+                var path = entry.FileName;
                 if (path.StartsWith("/") || path.StartsWith("\\") || path.IndexOf(':') >= 0)
                 {
                     Ask(Confirm.AbsolutePathInZip, ConfirmChoices.OkCancel, zip_filename);
@@ -146,14 +159,14 @@ namespace dsci
             return null;
         }
 
-        private string TrimPath(string fullname, string preamble)
+        private string AdjustPath(string fullname, string preamble)
         {
             return OtherFilesAliasRE.Replace(
                 fullname.Substring(preamble.Length), 
                 Properties.Settings.Default.OtherFilesDirectory);
         }
 
-        private void Extract(string folder, string path, ZipArchiveEntry entry, string zip_filename, List<ZipArchiveEntry> others)
+        private void Extract(string folder, string path, Entry entry, string zip_filename, List<Entry> others)
         {
             var extract_path = Path.Combine(folder, path);
             if (extract_path == path)
@@ -170,7 +183,7 @@ namespace dsci
                 if (others != null)
                 {
                     // When extracting a content, the user gets a chance to extract the duplicate file as a "other" file.
-                    var resp = Ask(Confirm.FileExists, ConfirmChoices.YesNoCancel, zip_filename, entry.Name);
+                    var resp = Ask(Confirm.FileExists, ConfirmChoices.YesNoCancel, zip_filename, Path.GetFileName(entry.FileName));
                     if (resp != ConfirmResponse.Yes)
                     {
                         others.Add(entry);
@@ -180,7 +193,7 @@ namespace dsci
                 else
                 {
                     // When extracting a "other" file, the options are "overwrite" and "discard".
-                    var resp = Ask(Confirm.FileExists2, ConfirmChoices.YesNoCancel, zip_filename, entry.Name);
+                    var resp = Ask(Confirm.FileExists2, ConfirmChoices.YesNoCancel, zip_filename, Path.GetFileName(entry.FileName));
                     if (resp != ConfirmResponse.Yes)
                     {
                         return;
@@ -191,12 +204,12 @@ namespace dsci
             // Extract the file, overwriting any existing file.
             try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(extract_path));
-                entry.ExtractToFile(extract_path, true);
+                //Directory.CreateDirectory(Path.GetDirectoryName(extract_path));
+                entry.Extract(extract_path);
             }
             catch (InvalidDataException e)
             {
-                var resp = Ask(Confirm.InvalidZipData, ConfirmChoices.YesNoCancel, zip_filename, entry.Name);
+                var resp = Ask(Confirm.InvalidZipData, ConfirmChoices.YesNoCancel, zip_filename, Path.GetFileName(entry.FileName));
                 if (resp != ConfirmResponse.Yes)
                 {
                     throw new ZipSkippedException("", e);
@@ -204,33 +217,21 @@ namespace dsci
             }
         }
 
-        private bool Identical(ZipArchiveEntry entry, string path, string zip_filename)
+        private bool Identical(Entry entry, string path, string zip_filename)
         {
-            try
+            using (var s = File.OpenRead(path))
             {
-                using (Stream s1 = entry.Open(), s2 = File.OpenRead(path))
+                if ((long)entry.Size != s.Length) return false;
+                var m = new ComparingOutputStream(s, true);
+                try
                 {
-                    // if (s1.Length != s2.Length) return false;
-                    if (entry.Length != s2.Length) return false;
-                    // Ah, no.  We should not do it this way...
-                    for (;;)
-                    {
-                        var c1 = s1.ReadByte();
-                        var c2 = s2.ReadByte();
-                        if (c1 != c2) return false;
-                        if (c1 == -1) return true;
-                    }
+                    entry.Extract(m);
                 }
-            }
-            catch (InvalidDataException e)
-            {
-                var resp = Ask(Confirm.InvalidZipData, ConfirmChoices.YesNoCancel, zip_filename, entry.Name);
-                if (resp != ConfirmResponse.Yes)
+                catch (Exception)
                 {
-                    throw new ZipSkippedException("", e);
+                    return false;
                 }
-                // Returning true makes the caller to silently ignore this file.
-                return true;
+                return m.IsEqual;
             }
         }
 
