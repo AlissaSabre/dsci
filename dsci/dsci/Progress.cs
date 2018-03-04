@@ -8,39 +8,53 @@ namespace dsci
 {
     public class Progress
     {
-        private float Value;
-
-        private readonly float Step;
-
-        private readonly Action<float> Updated;
-
-        public Progress(float min, float max, Action<float> updated)
+        private class ProgressCore
         {
-            Value = min;
-            Step = max - min;
-            Updated = updated;
+            public double Value;
+            public int IntValue;
+
+            public Action<int> Updated;
         }
 
-        private Progress(int divider, float value, float step, Action<float> updated)
+        private readonly ProgressCore Core;
+
+        private readonly double Step;
+
+        private readonly object UpdateLock;
+
+        public Progress(int min, int max, Action<int> updated)
         {
-            Value = value;
-            Step = step / divider;
-            Updated = updated;
+            Core = new ProgressCore();
+            Core.Updated = updated;
+            Core.Value = Core.IntValue = min;
+            Step = max - min;
+        }
+
+        private Progress(ProgressCore core, double step)
+        {
+            Core = core;
+            Step = step;
         }
 
         public Progress Divide(int divider)
         {
-            return new Progress(divider, Value, Step, Updated);
+            return new Progress(Core, Step / divider);
         }
 
-        public void Advance()
+        public void Advance(int n = 1)
         {
-            Updated?.Invoke(Value += Step);
-        }
-
-        public void Advance(int n)
-        {
-            Updated?.Invoke(Value += Step * n);
+            int new_int_value;
+            lock (Core)
+            {
+                new_int_value = (int)Math.Round(Core.Value += Step);
+                if (new_int_value <= Core.IntValue) return;
+                Core.IntValue = new_int_value;
+            }
+            lock (UpdateLock)
+            {
+                lock (Core) if (new_int_value < Core.IntValue) return;
+                Core.Updated(new_int_value);
+            }
         }
     }
 }

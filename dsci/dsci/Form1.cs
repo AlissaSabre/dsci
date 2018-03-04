@@ -16,6 +16,7 @@ namespace dsci
         {
             InitializeComponent();
             contentDirectory.Items.AddRange(DsConfig.ContentDirectories);
+            openFileDialog1.Filter += Properties.Settings.Default.ArchiveExtensions;
             Application.Idle += Application_Idle;
         }
 
@@ -60,6 +61,7 @@ namespace dsci
 
         private void installButton_Click(object sender, EventArgs e)
         {
+            AutoConfirms.Clear();
             progress.Value = progress.Minimum;
             var p = new WorkerParams();
             p.ContentDirectory = (string)contentDirectory.SelectedItem;
@@ -73,24 +75,45 @@ namespace dsci
             var progress = new Progress(0, 100, Installer_ProgressUpdated);
             var installer = new Installer();
             installer.ConfirmRequired += Installer_Confirm;
-            installer.Install(args.ContentDirectory, args.ZipFiles, progress);
+            installer.ContentDirectory = args.ContentDirectory;
+            installer.Install(args.ZipFiles, progress);
         }
 
-        private void Installer_ProgressUpdated(float progress)
+        private void Installer_ProgressUpdated(int progress)
         {
-            backgroundWorker1.ReportProgress((int)Math.Round(progress), null);
+            backgroundWorker1.ReportProgress(progress, null);
         }
+
+        private readonly Dictionary<Confirm, ConfirmResponse> AutoConfirms = new Dictionary<Confirm, ConfirmResponse>(); 
 
         private void Installer_Confirm(object sender, ConfirmEventArgs args)
         {
-            Invoke((Action)delegate ()
+            bool dont;
+            lock (AutoConfirms)
             {
-                using (var dlg = new ConfirmDialog())
+                dont = AutoConfirms.TryGetValue(args.Confirm, out args.Response);
+            }
+            if (!dont)
+            {
+                Invoke((Action)delegate ()
                 {
-                    dlg.EventArgs = args;
-                    dlg.ShowDialog();
-                }
-            });
+                    if (!AutoConfirms.TryGetValue(args.Confirm, out args.Response))
+                    {
+                        using (var dlg = new ConfirmDialog())
+                        {
+                            dlg.EventArgs = args;
+                            dlg.ShowDialog(this);
+                            if (dlg.DontAsk)
+                            {
+                                lock (AutoConfirms)
+                                {
+                                    AutoConfirms[args.Confirm] = args.Response;
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)

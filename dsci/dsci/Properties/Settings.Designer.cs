@@ -277,10 +277,37 @@ namespace dsci.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2147483647")]
-        public int MaxFileLength {
+        [global::System.Configuration.DefaultSettingValueAttribute("2147483648")]
+        public long MaxFileLength {
             get {
-                return ((int)(this["MaxFileLength"]));
+                return ((long)(this["MaxFileLength"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("*.zip;*.rar;*.7z")]
+        public string ArchiveExtensions {
+            get {
+                return ((string)(this["ArchiveExtensions"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Thumbs.db")]
+        public string Ignorable_3 {
+            get {
+                return ((string)(this["Ignorable_3"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Templates")]
+        public string TopDirectory_17 {
+            get {
+                return ((string)(this["TopDirectory_17"]));
             }
         }
     }

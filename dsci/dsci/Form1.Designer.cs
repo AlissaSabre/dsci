@@ -104,7 +104,7 @@
             // openFileDialog1
             // 
             this.openFileDialog1.AddExtension = false;
-            this.openFileDialog1.Filter = "Archive files|*.zip;*.rar;*.7z";
+            this.openFileDialog1.Filter = "Archive files|";
             this.openFileDialog1.Multiselect = true;
             // 
             // zipFilesButton

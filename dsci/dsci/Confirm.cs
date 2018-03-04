@@ -10,9 +10,10 @@ namespace dsci
         AbsolutePathInZip,
         FileExists,
         FileExists2,
-        InvalidZipData,
+        ExtractFailed,
         IOError,
         NoCompatibleContents,
         EntryTooLong,
+        ArchiveError,
 	}
 }

@@ -86,8 +86,17 @@
     <Setting Name="OtherFilesAliasRE" Type="System.String" Scope="Application">
       <Value Profile="(Default)">^(Documents?|Documentations?|ReadMes?|.*[ _!-]ReadMe'?s?)(?=[/\\])</Value>
     </Setting>
-    <Setting Name="MaxFileLength" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">2147483647</Value>
+    <Setting Name="MaxFileLength" Type="System.Int64" Scope="Application">
+      <Value Profile="(Default)">2147483648</Value>
+    </Setting>
+    <Setting Name="ArchiveExtensions" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">*.zip;*.rar;*.7z</Value>
+    </Setting>
+    <Setting Name="Ignorable_3" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Thumbs.db</Value>
+    </Setting>
+    <Setting Name="TopDirectory_17" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Templates</Value>
     </Setting>
   </Settings>
 </SettingsFile>

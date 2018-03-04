@@ -35,6 +35,8 @@ namespace dsci
             CancelLabel = button3.Text;
         }
 
+        public bool DontAsk { get { return dontAskCheckBox.Checked; } }
+
         private string OkLabel, YesLabel, NoLabel, CancelLabel;
 
         private ConfirmEventArgs _EventArgs;
